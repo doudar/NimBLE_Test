@@ -1,4 +1,4 @@
-You can easily switch between programming the server or client by switching the PlatformIO environment in vs conde. 
+You can easily switch between programming the server or client by switching the PlatformIO environment in vs code. 
 
 With the current >2.0 NimBLE library, I cannot sucessfully get a client to subscribe to notifications from any server (esp or otherwise) with more than 3 characterists on a server. 
 
