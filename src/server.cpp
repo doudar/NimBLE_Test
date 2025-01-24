@@ -153,7 +153,7 @@ void setup(void)
     // Indoor Bike Data
     NimBLECharacteristic *pBikeCharacteristic =
         pFitnessService->createCharacteristic(charToTest2, NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::WRITE | NIMBLE_PROPERTY::NOTIFY);
-    pBikeCharacteristic->setValue("Doesn't Always Show");
+    pBikeCharacteristic->setValue("Only shows if less than 3 characteristics");
     pBikeCharacteristic->setCallbacks(&chrCallbacks);
 
     // Fitness Machine Feature
@@ -167,34 +167,37 @@ void setup(void)
         pFitnessService->createCharacteristic(FITNESSMACHINECONTROLPOINT_UUID, NIMBLE_PROPERTY::WRITE, NIMBLE_PROPERTY::INDICATE);
     pControlPointCharacteristic->setCallbacks(&chrCallbacks);
 
-    /* Fitness Machine Status
+    ////////////////////////////////Adding any of the following characteristics will cause the client to not get notifications//////////////////
+    /*
+    // Fitness Machine Status
     NimBLECharacteristic *pStatusCharacteristic =
         pFitnessService->createCharacteristic(FITNESSMACHINESTATUS_UUID, NIMBLE_PROPERTY::NOTIFY);
     pStatusCharacteristic->setCallbacks(&chrCallbacks);
-   */
+
     // Training Status
     NimBLECharacteristic *pTrainingStatusCharacteristic =
         pFitnessService->createCharacteristic(FITNESSMACHINETRAININGSTATUS_UUID, NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::NOTIFY);
     pTrainingStatusCharacteristic->setValue("0"); // Default status
     pTrainingStatusCharacteristic->setCallbacks(&chrCallbacks);
-    /*
- // Resistance Level Range
- NimBLECharacteristic *pResistanceRangeCharacteristic =
-     pFitnessService->createCharacteristic(FITNESSMACHINERESISTANCELEVELRANGE_UUID, NIMBLE_PROPERTY::READ);
- pResistanceRangeCharacteristic->setValue("0-100"); // Example range
- pResistanceRangeCharacteristic->setCallbacks(&chrCallbacks);
 
- // Power Range
- NimBLECharacteristic *pPowerRangeCharacteristic =
-     pFitnessService->createCharacteristic(FITNESSMACHINEPOWERRANGE_UUID, NIMBLE_PROPERTY::READ);
- pPowerRangeCharacteristic->setValue("0-1000"); // Example range in watts
- pPowerRangeCharacteristic->setCallbacks(&chrCallbacks);
+    // Resistance Level Range
+    NimBLECharacteristic *pResistanceRangeCharacteristic =
+        pFitnessService->createCharacteristic(FITNESSMACHINERESISTANCELEVELRANGE_UUID, NIMBLE_PROPERTY::READ);
+    pResistanceRangeCharacteristic->setValue("0-100"); // Example range
+    pResistanceRangeCharacteristic->setCallbacks(&chrCallbacks);
 
- // Inclination Range
- NimBLECharacteristic *pInclinationRangeCharacteristic =
-     pFitnessService->createCharacteristic(FITNESSMACHINEINCLINATIONRANGE_UUID, NIMBLE_PROPERTY::READ);
- pInclinationRangeCharacteristic->setValue("-10-10"); // Example range in degrees
- pInclinationRangeCharacteristic->setCallbacks(&chrCallbacks);*/
+    // Power Range
+    NimBLECharacteristic *pPowerRangeCharacteristic =
+        pFitnessService->createCharacteristic(FITNESSMACHINEPOWERRANGE_UUID, NIMBLE_PROPERTY::READ);
+    pPowerRangeCharacteristic->setValue("0-1000"); // Example range in watts
+    pPowerRangeCharacteristic->setCallbacks(&chrCallbacks);
+
+    // Inclination Range
+    NimBLECharacteristic *pInclinationRangeCharacteristic =
+        pFitnessService->createCharacteristic(FITNESSMACHINEINCLINATIONRANGE_UUID, NIMBLE_PROPERTY::READ);
+    pInclinationRangeCharacteristic->setValue("-10-10"); // Example range in degrees
+    pInclinationRangeCharacteristic->setCallbacks(&chrCallbacks);
+    */
 
     /** Start the services when finished creating all Characteristics and Descriptors */
     pBaadService->start();
