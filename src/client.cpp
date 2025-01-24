@@ -142,7 +142,7 @@ void notifyCB(NimBLERemoteCharacteristic *pRemoteCharacteristic, uint8_t *pData,
     Serial.printf("%s\n", str.c_str());
 }
 
-//Loop through all Supported Services and subscribe to notifications
+// Loop through all Supported Services and subscribe to notifications
 void subscribeToAllNotifications(NimBLEClient *pClient)
 {
     if (!pClient || !pClient->isConnected())
@@ -163,13 +163,27 @@ void subscribeToAllNotifications(NimBLEClient *pClient)
                     Serial.printf("Found %s, %s\n", service.serviceUUID.toString().c_str(), pChr->getUUID().toString().c_str());
                     if ((pChr->canNotify() || pChr->canIndicate()))
                     {
-                        if (pChr->canIndicate() ? pChr->subscribe(false, notifyCB, false) : pChr->subscribe(true, notifyCB))
+                        if (pChr->canIndicate())
                         {
-                            Serial.printf("Subscribed to %s %s handle: %d\n", service.name.c_str(), pChr->getUUID().toString().c_str(), pChr->getHandle());
+                            if (pChr->subscribe(false, notifyCB, false))
+                            {
+                                Serial.printf("Indications setup for %s %s handle: %d\n", service.name.c_str(), pChr->getUUID().toString().c_str(), pChr->getHandle());
+                            }
+                            else
+                            {
+                                Serial.printf("Indications Failed for %s %s handle: %d\n", service.name.c_str(), pChr->getUUID().toString().c_str(), pChr->getHandle());
+                            }
                         }
-                        else
+                        else // Setup Notifications
                         {
-                            Serial.printf("Failed to subscribe to %s %s\n", service.name.c_str(), pChr->getUUID().toString().c_str());
+                            if (pChr->subscribe(true, notifyCB, false))
+                            {
+                                Serial.printf("Subscribed to %s %s handle: %d\n", service.name.c_str(), pChr->getUUID().toString().c_str(), pChr->getHandle());
+                            }
+                            else
+                            {
+                                Serial.printf("Failed to subscribe to %s %s handle: %d\n", service.name.c_str(), pChr->getUUID().toString().c_str(), pChr->getHandle());
+                            }
                         }
                     }
                 }
@@ -256,7 +270,7 @@ bool connectToServer()
 
     Serial.printf("Connected to: %s RSSI: %d\n", pClient->getPeerAddress().toString().c_str(), pClient->getRssi());
 
-    subscribeToAllNotifications(pClient);
+    // subscribeToAllNotifications(pClient);
 
     Serial.printf("Done with this device!\n");
     return true;
@@ -321,6 +335,8 @@ void loop()
         /** Found a device we want to connect to, do it now */
         if (connectToServer())
         {
+            vTaskDelay(5000);
+            subscribeToAllNotifications(NimBLEDevice::getConnectedClients()[0]);
             Serial.printf("Success! we should now be getting notifications, scanning for more!\n");
         }
         else
